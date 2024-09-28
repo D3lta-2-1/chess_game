@@ -1,0 +1,82 @@
+{
+  "pieces": [
+    {
+        "name": "Pawn",
+        "movements": [
+            [ "Blocking", 0, 1],
+            [ "Eating", 1, 1],
+            [ "Eating", -1, 1],
+            [ "FirstMove", 0, 2]
+        ],
+        "black_sprite": "assets/black_pawn.svg",
+        "white_sprite": "assets/white_pawn.svg"
+    },
+    {
+        "name": "Rook",
+        "movements": [
+            [ "Trailing", 0, 1],
+            [ "Trailing", 0, -1],
+            [ "Trailing", 1, 0],
+            [ "Trailing", -1, 0]
+        ],
+        "black_sprite": "assets/black_rook.svg",
+        "white_sprite": "assets/white_rook.svg"
+    },
+    {
+        "name": "Knight",
+        "movements": [
+            [ "NotFriend", 1, 2],
+            [ "NotFriend", -1, 2],
+            [ "NotFriend", 1, -2],
+            [ "NotFriend", -1, -2],
+            [ "NotFriend", 2, 1],
+            [ "NotFriend", -2, 1],
+            [ "NotFriend", 2, -1],
+            [ "NotFriend", -2, -1]
+        ],
+        "black_sprite": "assets/black_knight.svg",
+        "white_sprite": "assets/white_knight.svg"
+    },
+    {
+        "name": "Bishop",
+        "movements": [
+            [ "Trailing", 1, 1],
+            [ "Trailing", -1, 1],
+            [ "Trailing", 1, -1],
+            [ "Trailing", -1, -1]
+        ],
+        "black_sprite": "assets/black_bishop.svg",
+        "white_sprite": "assets/white_bishop.svg"
+    },
+    {
+        "name": "Queen",
+        "movements": [
+            [ "Trailing", 0, 1],
+            [ "Trailing", 0, -1],
+            [ "Trailing", 1, 0],
+            [ "Trailing", -1, 0],
+            [ "Trailing", 1, 1],
+            [ "Trailing", -1, 1],
+            [ "Trailing", 1, -1],
+            [ "Trailing", -1, -1]
+        ],
+        "black_sprite": "assets/black_queen.svg",
+        "white_sprite": "assets/white_queen.svg"
+    },
+    {
+        "name": "King",
+        "movements": [
+            [ "NotFriend", 0, 1],
+            [ "NotFriend", 0, -1],
+            [ "NotFriend", 1, 0],
+            [ "NotFriend", -1, 0],
+            [ "NotFriend", 1, 1],
+            [ "NotFriend", -1, 1],
+            [ "NotFriend", 1, -1],
+            [ "NotFriend", -1, -1]
+        ],
+        "black_sprite": "assets/black_king.svg",
+        "white_sprite": "assets/white_king.svg"
+    }
+  ]
+}
