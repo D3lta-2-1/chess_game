@@ -3,8 +3,9 @@ use std::time::{Duration, Instant};
 use vello::{wgpu, AaConfig, Renderer, RendererOptions, Scene};
 use vello::peniko::Color;
 use vello::util::{RenderContext, RenderSurface};
+use vello::wgpu::Backends;
 use winit::application::ApplicationHandler;
-use winit::dpi::{LogicalSize, PhysicalPosition};
+use winit::dpi::{PhysicalPosition};
 use winit::event::{ElementState, MouseButton, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow};
 use winit::keyboard::{Key, NamedKey};
@@ -61,7 +62,7 @@ impl<'s, T: LogicHandler> SimpleVelloApp<'s, T> {
 
     fn create_winit_window(event_loop: &ActiveEventLoop) -> Arc<Window> {
         let attr = Window::default_attributes()
-            .with_inner_size(LogicalSize::new(720, 480))
+            //.with_inner_size(LogicalSize::new(720, 480))
             .with_resizable(true)
             .with_title("Chess");
         Arc::new(event_loop.create_window(attr).unwrap())
@@ -141,6 +142,12 @@ impl<'s, T: LogicHandler> ApplicationHandler for SimpleVelloApp<'s, T> {
                     self.logic_handler.on_mouse_click(self.last_cursor_pos.x, self.last_cursor_pos.y);
                 }
             }
+            WindowEvent::Touch(touch) => {
+                if touch.phase == winit::event::TouchPhase::Ended {
+                    self.logic_handler.on_mouse_click(touch.location.x, touch.location.y);
+                }
+            }
+
             WindowEvent::KeyboardInput { event,.. } => {
                 if event.logical_key == Key::Named(NamedKey::Escape) && event.state == ElementState::Released {
                     self.logic_handler.on_exit_press()
@@ -157,17 +164,17 @@ impl<'s, T: LogicHandler> ApplicationHandler for SimpleVelloApp<'s, T> {
                 // the same Scene is reused so that the underlying memory allocation can also be reused.
                 self.scene.reset();
 
-                // Re-add the objects to draw to the scene.
-                let now = Instant::now();
-                self.logic_handler.draw(&mut self.scene, now - self.last_frame_time);
-                self.last_frame_time = now;
-
                 // Get the RenderSurface (surface + config)
                 let surface = &render_state.surface;
 
                 // Get the window size
                 let width = surface.config.width;
                 let height = surface.config.height;
+
+                // Re-add the objects to draw to the scene.
+                let now = Instant::now();
+                self.logic_handler.draw(&mut self.scene, now - self.last_frame_time);
+                self.last_frame_time = now;
 
                 // Get a handle to the device
                 let device_handle = &self.context.devices[surface.dev_id];

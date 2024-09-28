@@ -1,4 +1,3 @@
-use std::path::Path;
 use std::time::Duration;
 use vello::kurbo::Affine;
 use vello::Scene;
@@ -8,6 +7,8 @@ use crate::game::chess_board::ChessBoard;
 use crate::game::grid::BOARD_SIZE;
 use crate::game::piece_registry::PieceRegistry;
 use crate::game::selection::Selection;
+#[cfg(not(target_os = "android"))]
+use std::path::Path;
 
 
 mod board_renderer;
@@ -28,12 +29,15 @@ pub struct ChessGame {
 impl ChessGame {
     pub fn new() -> Self {
         Self {
+            #[cfg(not(target_os = "android"))]
             registry: PieceRegistry::load_from_config(&Path::new("config")),
+            #[cfg(target_os = "android")]
+            registry: PieceRegistry::fake_it(),
             boards: vec![ChessBoard::new()],
             renderer: BoardRenderer::new(),
             selection: None,
             scene: Scene::new(),
-            scale_factor: 0.75,
+            scale_factor: 1.25,
         }
     }
 

@@ -17,7 +17,9 @@ impl BoardRenderer {
         }
     }
 
-    const CELL_SIZE: f64 = 100.0;
+
+    pub const CELL_SIZE: f64 = 100.0;
+    pub const BOARD_SIZE: f64 = Self::CELL_SIZE * 8.0;
 
     fn create_board(tile_colors: [Color; 2]) -> Scene {
         let mut scene = Scene::new();
