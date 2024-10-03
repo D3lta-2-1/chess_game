@@ -57,7 +57,7 @@ impl Config {
 }
 
 struct PieceData {
-    name: String,
+    _name: String,
     movements: Vec<Movement>,
     black_sprite: Scene,
     white_sprite: Scene,
@@ -79,10 +79,12 @@ impl PieceRegistry {
         }
     }
 
+    //should be loaded from a bundled file.
+    #[cfg(target_os = "android")]
     pub fn fake_it() -> Self {
         let mut registry = Self::new();
-        let pawn = registry.register_piece(PieceData {
-            name: "Pawn".to_string(),
+        let _pawn = registry.register_piece(PieceData {
+            _name: "Pawn".to_string(),
             movements: vec![
                 Movement(MovementKind::Blocking, 0, 1),
                 Movement(MovementKind::Eating, 1, 1),
@@ -92,8 +94,8 @@ impl PieceRegistry {
             black_sprite: render(include_str!("../../assets/black_pawn.svg")).unwrap(),
             white_sprite: render(include_str!("../../assets/white_pawn.svg")).unwrap(),
         });
-        let rook = registry.register_piece(PieceData {
-            name: "Rook".to_string(),
+        let _rook = registry.register_piece(PieceData {
+            _name: "Rook".to_string(),
             movements: vec![
                 Movement(MovementKind::Trailing, 0, 1),
                 Movement(MovementKind::Trailing, 0, -1),
@@ -103,8 +105,8 @@ impl PieceRegistry {
             black_sprite: render(include_str!("../../assets/black_rook.svg")).unwrap(),
             white_sprite: render(include_str!("../../assets/white_rook.svg")).unwrap(),
         });
-        let knight = registry.register_piece(PieceData {
-            name: "Knight".to_string(),
+        let _knight = registry.register_piece(PieceData {
+            _name: "Knight".to_string(),
             movements: vec![
                 Movement(MovementKind::NotFriend, 1, 2),
                 Movement(MovementKind::NotFriend, 2, 1),
@@ -118,8 +120,8 @@ impl PieceRegistry {
             black_sprite: render(include_str!("../../assets/black_knight.svg")).unwrap(),
             white_sprite: render(include_str!("../../assets/white_knight.svg")).unwrap(),
         });
-        let bishop = registry.register_piece(PieceData {
-            name: "Bishop".to_string(),
+        let _bishop = registry.register_piece(PieceData {
+            _name: "Bishop".to_string(),
             movements: vec![
                 Movement(MovementKind::Trailing, 1, 1),
                 Movement(MovementKind::Trailing, 1, -1),
@@ -129,8 +131,8 @@ impl PieceRegistry {
             black_sprite: render(include_str!("../../assets/black_bishop.svg")).unwrap(),
             white_sprite: render(include_str!("../../assets/white_bishop.svg")).unwrap(),
         });
-        let queen = registry.register_piece(PieceData {
-            name: "Queen".to_string(),
+        let _queen = registry.register_piece(PieceData {
+            _name: "Queen".to_string(),
             movements: vec![
                 Movement(MovementKind::Trailing, 0, 1),
                 Movement(MovementKind::Trailing, 0, -1),
@@ -144,8 +146,8 @@ impl PieceRegistry {
             black_sprite: render(include_str!("../../assets/black_queen.svg")).unwrap(),
             white_sprite: render(include_str!("../../assets/white_queen.svg")).unwrap(),
         });
-        let king = registry.register_piece(PieceData {
-            name: "King".to_string(),
+        let _king = registry.register_piece(PieceData {
+            _name: "King".to_string(),
             movements: vec![
                 Movement(MovementKind::Blocking, 0, 1),
                 Movement(MovementKind::Blocking, 0, -1),
@@ -181,7 +183,7 @@ impl PieceRegistry {
             File::open(white_path).unwrap().read_to_string(&mut string).unwrap();
             let white_sprite = render(&string).unwrap();
             registry.register_piece(PieceData {
-                name: piece.name,
+                _name: piece.name,
                 movements: piece.movements,
                 black_sprite,
                 white_sprite,

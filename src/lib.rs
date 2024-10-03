@@ -1,4 +1,4 @@
-#![feature(is_none_or)]
+//#![feature(is_none_or)] //depend on rust version
 
 mod app;
 mod game;

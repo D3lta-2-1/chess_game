@@ -1,3 +1,3 @@
 fn main() {
-    chess::start().expect("Failed to start chess");
+    chess_game::start().expect("Failed to start chess");
 }

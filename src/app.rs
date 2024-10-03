@@ -3,7 +3,6 @@ use std::time::{Duration, Instant};
 use vello::{wgpu, AaConfig, Renderer, RendererOptions, Scene};
 use vello::peniko::Color;
 use vello::util::{RenderContext, RenderSurface};
-use vello::wgpu::Backends;
 use winit::application::ApplicationHandler;
 use winit::dpi::{PhysicalPosition};
 use winit::event::{ElementState, MouseButton, WindowEvent};

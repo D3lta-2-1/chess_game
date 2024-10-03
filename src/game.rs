@@ -10,7 +10,6 @@ use crate::game::selection::Selection;
 #[cfg(not(target_os = "android"))]
 use std::path::Path;
 
-
 mod board_renderer;
 mod chess_board;
 mod selection;
