@@ -3,6 +3,7 @@ use vello::peniko::{Color, Fill};
 use vello::Scene;
 use crate::game::Selection;
 use crate::game::chess_board::ChessBoard;
+use crate::game::grid::BOARD_SIZE;
 use crate::game::piece_registry::PieceRegistry;
 
 pub struct BoardRenderer {
@@ -19,7 +20,7 @@ impl BoardRenderer {
 
 
     pub const CELL_SIZE: f64 = 100.0;
-    pub const BOARD_SIZE: f64 = Self::CELL_SIZE * 8.0;
+    pub const BOARD_SIZE: f64 = Self::CELL_SIZE * BOARD_SIZE as f64;
 
     fn create_board(tile_colors: [Color; 2]) -> Scene {
         let mut scene = Scene::new();

@@ -1,10 +1,9 @@
 use std::time::Duration;
-use vello::kurbo::Affine;
+use vello::kurbo::{Affine, Point, Rect, Vec2};
 use vello::Scene;
 use crate::app::LogicHandler;
 use crate::game::board_renderer::BoardRenderer;
 use crate::game::chess_board::ChessBoard;
-use crate::game::grid::BOARD_SIZE;
 use crate::game::piece_registry::PieceRegistry;
 use crate::game::selection::Selection;
 #[cfg(not(target_os = "android"))]
@@ -22,7 +21,7 @@ pub struct ChessGame {
     renderer: BoardRenderer,
     selection: Option<Selection>,
     scene: Scene,
-    scale_factor: f64,
+    transform: Affine,
 }
 
 impl ChessGame {
@@ -36,7 +35,7 @@ impl ChessGame {
             renderer: BoardRenderer::new(),
             selection: None,
             scene: Scene::new(),
-            scale_factor: 1.25,
+            transform: Affine::IDENTITY,
         }
     }
 
@@ -70,11 +69,17 @@ impl ChessGame {
 
 impl LogicHandler for ChessGame {
     fn on_mouse_click(&mut self, x: f64, y: f64) {
-        let cell_size = 100.0 * self.scale_factor;
-        let x = (x / cell_size) as usize;
-        let y = (y / cell_size) as usize;
-        if x < BOARD_SIZE && y < BOARD_SIZE {
+        let point_on_screen = Point::new(x, y);
+        let point_on_board = self.transform.inverse() * point_on_screen;
+        let case = Affine::scale(BoardRenderer::CELL_SIZE).inverse() * point_on_board;
+        let rect = Rect::new(0.0, 0.0, BoardRenderer::BOARD_SIZE, BoardRenderer::BOARD_SIZE);
+
+        if rect.contains(point_on_board) {
+            let x = case.x as usize;
+            let y = case.y as usize;
             self.clicked_on_cell(x, y);
+        } else {
+            self.selection = None;
         }
     }
 
@@ -87,9 +92,16 @@ impl LogicHandler for ChessGame {
 
     fn draw(&mut self, scene: &mut Scene, _duration: Duration) {
         self.refresh();
-        let transform = Affine::scale(self.scale_factor);
-        scene.append(&self.scene, Some(transform));
+        scene.append(&self.scene, Some(self.transform));
+    }
 
+    fn surface_resize(&mut self, width: u32, height: u32) {
+        let min = u32::min(width, height) as f64;
+        let scale_factor = min / BoardRenderer::BOARD_SIZE;
 
+        let mut vec = Vec2::new(width as f64, height as f64);
+        vec -= Vec2::new(BoardRenderer::BOARD_SIZE * scale_factor, BoardRenderer::BOARD_SIZE * scale_factor);
+        vec /= 2.0;
+        self.transform = Affine::scale(scale_factor).then_translate(vec);
     }
 }

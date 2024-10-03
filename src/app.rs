@@ -4,7 +4,7 @@ use vello::{wgpu, AaConfig, Renderer, RendererOptions, Scene};
 use vello::peniko::Color;
 use vello::util::{RenderContext, RenderSurface};
 use winit::application::ApplicationHandler;
-use winit::dpi::{PhysicalPosition};
+use winit::dpi::{LogicalSize, PhysicalPosition};
 use winit::event::{ElementState, MouseButton, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow};
 use winit::keyboard::{Key, NamedKey};
@@ -14,6 +14,7 @@ pub trait LogicHandler {
     fn on_mouse_click(&mut self, x: f64, y: f64);
     fn on_exit_press(&mut self);
     fn draw(&mut self, scene: &mut Scene, duration: Duration);
+    fn surface_resize(&mut self, width: u32, height: u32);
 }
 pub struct ActiveRenderState<'s> {
     surface: RenderSurface<'s>,
@@ -61,7 +62,8 @@ impl<'s, T: LogicHandler> SimpleVelloApp<'s, T> {
 
     fn create_winit_window(event_loop: &ActiveEventLoop) -> Arc<Window> {
         let attr = Window::default_attributes()
-            //.with_inner_size(LogicalSize::new(720, 480))
+            .with_min_inner_size(LogicalSize::new(40, 40))
+            .with_inner_size(LogicalSize::new(720, 480))
             .with_resizable(true)
             .with_title("Chess");
         Arc::new(event_loop.create_window(attr).unwrap())
@@ -155,6 +157,7 @@ impl<'s, T: LogicHandler> ApplicationHandler for SimpleVelloApp<'s, T> {
             WindowEvent::Resized(size) => {
                 self.context
                     .resize_surface(&mut render_state.surface, size.width, size.height);
+                self.logic_handler.surface_resize(size.width, size.height);
                 render_state.window.request_redraw();
             }
 
