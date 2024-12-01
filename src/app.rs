@@ -1,5 +1,6 @@
 use std::sync::Arc;
 use std::time::{Duration, Instant};
+use log::debug;
 use vello::{wgpu, AaConfig, Renderer, RendererOptions, Scene};
 use vello::peniko::Color;
 use vello::util::{RenderContext, RenderSurface};
@@ -71,12 +72,13 @@ impl<'s, T: LogicHandler> SimpleVelloApp<'s, T> {
 
     /// Helper function that creates a vello `Renderer` for a given `RenderContext` and `RenderSurface`
     fn create_vello_renderer(render_cx: &RenderContext, surface: &RenderSurface) -> Renderer {
+
         Renderer::new(
             &render_cx.devices[surface.dev_id].device,
             RendererOptions {
                 surface_format: Some(surface.format),
                 use_cpu: false,
-                antialiasing_support: vello::AaSupport::all(),
+                antialiasing_support: vello::AaSupport::area_only(),
                 num_init_threads: None,
             },
         )
@@ -104,6 +106,7 @@ impl<'s, T: LogicHandler> ApplicationHandler for SimpleVelloApp<'s, T> {
             wgpu::PresentMode::AutoVsync,
         );
         let surface = pollster::block_on(surface_future).expect("Error creating surface");
+
 
         // Create a vello Renderer for the surface (using its device id)
         self.renderers
@@ -148,9 +151,15 @@ impl<'s, T: LogicHandler> ApplicationHandler for SimpleVelloApp<'s, T> {
                     self.logic_handler.on_mouse_click(touch.location.x, touch.location.y);
                 }
             }
-
-            WindowEvent::KeyboardInput { event,.. } => {
+            WindowEvent::KeyboardInput { event, ..} => {
+                debug!("keyboard input : {:?}", event.logical_key);
                 if event.logical_key == Key::Named(NamedKey::Escape) && event.state == ElementState::Released {
+                    self.logic_handler.on_exit_press()
+                }
+                if event.logical_key == Key::Named(NamedKey::AudioVolumeUp) && event.state == ElementState::Released {
+                    self.logic_handler.on_exit_press()
+                }
+                if event.logical_key == Key::Named(NamedKey::BrowserBack) && event.state == ElementState::Released {
                     self.logic_handler.on_exit_press()
                 }
             }
@@ -200,7 +209,7 @@ impl<'s, T: LogicHandler> ApplicationHandler for SimpleVelloApp<'s, T> {
                             base_color: Color::GRAY, // Background color
                             width,
                             height,
-                            antialiasing_method: AaConfig::Msaa8,
+                            antialiasing_method: AaConfig::Area,
                         },
                     )
                     .expect("failed to render to surface");
