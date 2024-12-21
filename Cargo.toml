@@ -6,12 +6,15 @@ edition = "2021"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[[bin]]
+name = "entrypoint"
+path = "src/main.rs"
+
 [dependencies]
 pollster = "0.4.0"
-anyhow = "1.0.86"
 winit = "0.30.5"
 vello = "0.3.0"
-vello_svg = { path = "../vello_svg" }
+vello_svg = "0.5.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = "0.4.22"

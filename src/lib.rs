@@ -3,9 +3,6 @@ pub mod app;
 pub mod game;
 
 #[cfg(target_os = "android")]
-use winit::platform::android::EventLoopBuilderExtAndroid;
-
-#[cfg(target_os = "android")]
 #[export_name = "android_main"]
 pub fn main(android_app: winit::platform::android::activity::AndroidApp) {
 

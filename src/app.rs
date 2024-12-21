@@ -72,7 +72,6 @@ impl<'s, T: LogicHandler> SimpleVelloApp<'s, T> {
 
     /// Helper function that creates a vello `Renderer` for a given `RenderContext` and `RenderSurface`
     fn create_vello_renderer(render_cx: &RenderContext, surface: &RenderSurface) -> Renderer {
-
         Renderer::new(
             &render_cx.devices[surface.dev_id].device,
             RendererOptions {
